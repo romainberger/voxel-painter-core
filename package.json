@@ -7,6 +7,14 @@
     "email": "romain@romainberger.com",
     "url": "http://romainberger.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:romainberger/voxel-painter-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/romainberger/voxel-painter-core/issues",
+    "email": "romain@romainberger.com"
+  },
   "main": "index.js",
   "engines": {
     "node": "0.10.x",

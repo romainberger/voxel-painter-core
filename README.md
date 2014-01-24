@@ -14,36 +14,38 @@ Install with npm
 
 Use [Browserify](http://browserify.org/) to bundle your code:
 
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title></title>
-        <style>
-            #voxel-painter {
-                height: 1000px;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="voxel-painter"></div>
-        <script src="bundle.js"></script>
-    </body>
-    </html>
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style>
+        #voxel-painter {
+            height: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <div id="voxel-painter"></div>
+    <script src="bundle.js"></script>
+</body>
+</html>
+```
 
+```
+var voxelPainter = require('voxel-painter-core')
 
+// Colors to use
+var colors = ['2ECC71', '3498DB', '34495E', 'E67E22', 'ECF0F1']
 
-    var voxelPainter = require('voxel-painter-core')
+// Options
+var options = {
+    colors: colors,
+    container: '#container'
+}
 
-    // Colors to use
-    var colors = ['2ECC71', '3498DB', '34495E', 'E67E22', 'ECF0F1']
-
-    // Options
-    var options = {
-        colors: colors,
-        container: '#container'
-    }
-
-    var painter = voxelPainter(options)
+var painter = voxelPainter(options)
+```
 
 ## Methods
 

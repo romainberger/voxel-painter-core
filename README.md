@@ -47,6 +47,8 @@ var options = {
 var painter = voxelPainter(options)
 ```
 
+For a working example check out the [example directory](https://github.com/romainberger/voxel-painter-core/tree/master/example).
+
 ## Methods
 
 ### Add color

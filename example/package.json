@@ -1,0 +1,16 @@
+{
+  "name": "voxel-painter-core-example",
+  "version": "0.0.0",
+  "description": "Example for Voxel Painter Core",
+  "main": "main.js",
+  "scripts": {
+    "start": "watchify main.js -o bundle.js"
+  },
+  "license": "BSD",
+  "dependencies": {
+    "voxel-painter-core": "0.0.3"
+  },
+  "devDependencies": {
+    "watchify": "~0.5.4"
+  }
+}

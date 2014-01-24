@@ -15,12 +15,9 @@ module.exports = function(options) {
   var CubeMaterial = THREE.MeshBasicMaterial
   var cube = new THREE.CubeGeometry( 50, 50, 50 )
   var wireframeCube = new THREE.CubeGeometry(50.5, 50.5 , 50.5)
-  var wireframe = true, fill = true, animation = false, animating = false, animationInterval
-  var manualAnimating = false
-  var sliderEl, playPauseEl
+  var wireframe = true, fill = true
   var wireframeOptions = { color: 0x000000, wireframe: true, wireframeLinewidth: 1, opacity: 0.8 }
   var wireframeMaterial = new THREE.MeshBasicMaterial(wireframeOptions)
-  var animationFrames = []
   var currentFrame = 0
   var colors = options.colors.map(function(c) { return hex2rgb(c) })
 
@@ -28,47 +25,8 @@ module.exports = function(options) {
     addColorToPalette(c)
   }
 
-  showWelcome()
   init()
   raf(window).on('data', render)
-
-  function showWelcome() {
-    var seenWelcome = localStorage.getItem('seenWelcome')
-    if (seenWelcome) return
-    $('#welcome').modal()
-    localStorage.setItem('seenWelcome', true)
-  }
-
-  exports.viewInstructions = function() {
-    $('#welcome').modal()
-  }
-
-  exports.about = function() {
-    $('#about').modal()
-  }
-
-  // bunny
-  exports.loadExample = function() {
-    window.location.replace( '#A/bfhkSfdihfShaefShahfShahhYfYfYfSfSfSfYhYhYhahjSdechjYhYhYhadfQUhchfYhYhSfYdQYhYhaefQYhYhYhYhSjcchQYhYhYhYhSfSfWehSfUhShecheQYhYhYhYhachYhYhafhYhahfShXdfhShcihYaVhfYmfbihhQYhYhYhaddQShahfYhYhYhShYfYfYfafhQUhchfYhYhYhShechdUhUhcheUhUhcheUhUhcheUhUhcheUhUhWehUhUhcfeUhUhcfeUhUhcfeUhUhcfeUhUhehehUhUhcheUhUhcheUhUhcheUhUhWehUhUhcfeUhUhcfeUhUhcfeUhUhcfeUhUhWffUhWheQYhYhYhYhachQYiYhYhShYfYfYfYfShYhYhYhYhadeakiQSfSfSfUfShShShUfSfSfSfUfShShShUfSfSfSfcakQShShWfeQShShWeeQUhWfhUhShUfWjhQUfUfUfWfdQShShShWkhQUfUfUfchjQYhYhYhYhUfYfYfYeYhUfYhYhcifQYfYfYfYeQcffQYhYhYiYiYfcdhckjUfUfZfeYcciefhleiYhYcYhcfhYhcfhYhcifYhcfhYhcfhYhYcYh')
-    buildFromHash()
-  }
-
-  exports.browseTwitter = function() {
-    $('#browse').modal()
-    var content = $('#browse .demo-browser-content')
-    content.html('')
-    var links = $("iframe:first").contents().find('.tweet .e-entry-title a')
-    links = links.filter(function(i, link) {
-      var url = $(link).attr('data-expanded-url')
-      if (!url) return
-      if (url.match(/imgur/)) return true
-      return false
-    })
-    links = links.map(function(i, link) {
-      var url = $(link).attr('data-expanded-url')
-      content.append('<img src="' + url + '"/>')
-    })
-  }
 
   exports.getImage = function(imgURL, cb) {
     var img = new Image()
@@ -103,11 +61,6 @@ module.exports = function(options) {
       .map(function(mesh) { mesh.wireMesh.visible = bool })
   }
 
-  exports.toggleAnimation = function(bool) {
-    animation = bool
-    $('.animationControls').toggle()
-  }
-
   exports.setFill = function(bool) {
     fill = bool
     scene.children
@@ -126,13 +79,6 @@ module.exports = function(options) {
       .filter(function(el) { return el !== brush && el.isVoxel })
       .map(function(cube) { scene.remove(cube) })
     buildFromHash()
-  }
-
-  exports.playPause = function() {
-    animating = !animating
-    playPauseEl.toggleClass('fui-play', !animating).toggleClass('fui-pause', animating)
-    if (animating) animationInterval = setInterval(changeFrame, 250)
-    else clearInterval(animationInterval)
   }
 
   function addVoxel(x, y, z, c) {
@@ -254,7 +200,7 @@ module.exports = function(options) {
         .filter(function(el) { return el.isVoxel })
         .map(function(mesh) { scene.remove(mesh.wireMesh); scene.remove(mesh) })
       var frameMask = 'A'
-      if (currentFrame != 0) frameMask = 'A' + currentFrame
+      if (currentFrame !== 0) frameMask = 'A' + currentFrame
       buildFromHash(frameMask)
     })
     picker.on('hide', function(e) {
@@ -313,48 +259,8 @@ module.exports = function(options) {
       }, 0)
     })
 
-    // var actionsMenu = $(".actionsMenu")
-    // actionsMenu.dropkick({
-    //   change: function(value, label) {
-    //     if (value === 'noop') return
-    //     if (value in exports) exports[value]()
-    //     setTimeout(function() {
-    //       actionsMenu.dropkick('reset')
-    //     }, 0)
-    //   }
-    // })
-
-    // Todo list
-    $(".todo li").click(function() {
-        $(this).toggleClass("todo-done");
-    });
-
-    // Init tooltips
-    $("[data-toggle=tooltip]").tooltip("show");
-
     // Init tags input
     // $("#tagsinput").tagsInput();
-
-    // sliderEl = $("#slider")
-    // playPauseEl = $('.play-pause')
-    // var addFrameButton = $('.plus-button')
-    // var removeFrameButton = $('.minus-button')
-
-    // // Init jQuery UI slider
-    // sliderEl.slider({
-    //   min: 1,
-    //   max: 1,
-    //   value: 1,
-    //   orientation: "horizontal",
-    //   range: "min",
-    //   change: function( event, ui ) {
-    //     if (manualAnimating) return
-    //     var val = ui.value
-    //     var nextFrame = val - 1
-    //     animate(nextFrame)
-    //     currentFrame = nextFrame
-    //   }
-    // })
 
     // addFrameButton.click(addFrame)
     // removeFrameButton.click(removeFrame)
@@ -400,7 +306,7 @@ module.exports = function(options) {
 
     var geometry = new THREE.Geometry()
 
-    for ( var i = - size; i <= size; i += step ) {
+    for (var i = - size; i <= size; i += step) {
 
       geometry.vertices.push( new THREE.Vector3( - size, 0, i ) )
       geometry.vertices.push( new THREE.Vector3(   size, 0, i ) )
@@ -475,32 +381,21 @@ module.exports = function(options) {
 
     container.appendChild(renderer.domElement)
 
-    renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false )
-    renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false )
-    renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false )
-    document.addEventListener( 'keydown', onDocumentKeyDown, false )
-    document.addEventListener( 'keyup', onDocumentKeyUp, false )
-    window.addEventListener('DOMMouseScroll', mousewheel, false);
-    window.addEventListener('mousewheel', mousewheel, false);
+    renderer.domElement.addEventListener('mousemove', onDocumentMouseMove, false)
+    renderer.domElement.addEventListener('mousedown', onDocumentMouseDown, false)
+    renderer.domElement.addEventListener('mouseup', onDocumentMouseUp, false)
+    document.addEventListener('keydown', onDocumentKeyDown, false)
+    document.addEventListener('keyup', onDocumentKeyUp, false)
+    window.addEventListener('DOMMouseScroll', mousewheel, false)
+    window.addEventListener('mousewheel', mousewheel, false)
+    window.addEventListener('resize', onWindowResize, false)
 
-    function mousewheel(event) {
-      // event.preventDefault()
-      // prevent zoom if a modal is open
-      if ($('.modal').hasClass('in'))
-        return
-      zoom(event.wheelDeltaY || event.detail)
-    }
-
-    window.addEventListener( 'resize', onWindowResize, false )
-
-    if ( window.location.hash ) buildFromHash()
+    if (window.location.hash) buildFromHash()
 
     updateHash()
-
   }
 
   function onWindowResize() {
-
     camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()
 
@@ -518,27 +413,27 @@ module.exports = function(options) {
     }
   }
 
+  function updateBrush() {
+    brush.position.x = Math.floor( position.x / 50 ) * 50 + 25
+    brush.position.y = Math.floor( position.y / 50 ) * 50 + 25
+    brush.position.z = Math.floor( position.z / 50 ) * 50 + 25
+  }
+
   function interact() {
     if (typeof raycaster === 'undefined') return
 
-    if ( objectHovered ) {
+    if (objectHovered) {
       objectHovered.material.opacity = 1
       objectHovered = null
     }
 
     var intersect = getIntersecting()
 
-    if ( intersect ) {
+    if (intersect) {
       var normal = intersect.face.normal.clone()
       normal.applyMatrix4( intersect.object.matrixRotationWorld )
       var position = new THREE.Vector3().addVectors( intersect.point, normal )
       var newCube = [Math.floor( position.x / 50 ), Math.floor( position.y / 50 ), Math.floor( position.z / 50 )]
-
-      function updateBrush() {
-        brush.position.x = Math.floor( position.x / 50 ) * 50 + 25
-        brush.position.y = Math.floor( position.y / 50 ) * 50 + 25
-        brush.position.z = Math.floor( position.z / 50 ) * 50 + 25
-      }
 
       if (isAltDown) {
         if (!brush.currentCube) brush.currentCube = newCube
@@ -555,14 +450,16 @@ module.exports = function(options) {
         updateBrush()
         updateHash()
         return brush.currentCube = newCube
-      } else if ( isShiftDown ) {
-        if ( intersect.object !== plane ) {
+      }
+      else if (isShiftDown) {
+        if (intersect.object !== plane) {
           objectHovered = intersect.object
           objectHovered.material.opacity = 0.5
           brush.position.y = 2000
           return
         }
-      } else {
+      }
+      else {
         updateBrush()
         return
       }
@@ -570,11 +467,10 @@ module.exports = function(options) {
     brush.position.y = 2000
   }
 
-  function onDocumentMouseMove( event ) {
+  function onDocumentMouseMove(event) {
     event.preventDefault()
 
-    if ( isMouseDown ) {
-
+    if (isMouseDown) {
       theta = - ( ( event.clientX - onMouseDownPosition.x ) * 0.5 ) + onMouseDownTheta
       phi = ( ( event.clientY - onMouseDownPosition.y ) * 0.5 ) + onMouseDownPhi
 
@@ -584,7 +480,6 @@ module.exports = function(options) {
       camera.position.y = radius * Math.sin( phi * Math.PI / 360 )
       camera.position.z = radius * Math.cos( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 )
       camera.updateMatrix()
-
     }
 
     mouse2D.x = ( event.clientX / window.innerWidth ) * 2 - 1
@@ -593,7 +488,7 @@ module.exports = function(options) {
     interact()
   }
 
-  function onDocumentMouseDown( event ) {
+  function onDocumentMouseDown(event) {
     event.preventDefault()
     isMouseDown = true
     onMouseDownTheta = theta
@@ -602,23 +497,24 @@ module.exports = function(options) {
     onMouseDownPosition.y = event.clientY
   }
 
-  function onDocumentMouseUp( event ) {
+  function onDocumentMouseUp(event) {
     event.preventDefault()
     isMouseDown = false
     onMouseDownPosition.x = event.clientX - onMouseDownPosition.x
     onMouseDownPosition.y = event.clientY - onMouseDownPosition.y
 
-    if ( onMouseDownPosition.length() > 5 ) return
+    if (onMouseDownPosition.length() > 5) return
 
     var intersect = getIntersecting()
 
-    if ( intersect ) {
-      if ( isShiftDown ) {
-        if ( intersect.object != plane ) {
+    if (intersect) {
+      if (isShiftDown) {
+        if (intersect.object != plane) {
           scene.remove( intersect.object.wireMesh )
           scene.remove( intersect.object )
         }
-      } else {
+      }
+      else {
         if (brush.position.y != 2000) addVoxel(brush.position.x, brush.position.y, brush.position.z, color)
       }
     }
@@ -628,8 +524,8 @@ module.exports = function(options) {
     interact()
   }
 
-  function onDocumentKeyDown( event ) {
-    switch( event.keyCode ) {
+  function onDocumentKeyDown(event) {
+    switch (event.keyCode) {
       case 189: zoom(100); break
       case 187: zoom(-100); break
       case 49: exports.setColor(0); break
@@ -650,104 +546,22 @@ module.exports = function(options) {
       case 65: setIsometricAngle(); break
       case 87: addFrame(); break
     }
-
   }
 
-  function onDocumentKeyUp( event ) {
-
-    switch( event.keyCode ) {
+  function onDocumentKeyUp(event) {
+    switch (event.keyCode) {
       case 16: isShiftDown = false; break
       case 17: isCtrlDown = false; break
       case 18: isAltDown = false; break
     }
   }
 
-  function changeFrame() {
-    if (animationFrames.length === 0) return
-    nextFrame = (currentFrame + 1) % animationFrames.length
-    animate(nextFrame)
-    currentFrame = nextFrame
-    manualAnimating = true
-    // sliderEl.slider( "option", "value", currentFrame + 1)
-    manualAnimating = false
-  }
-
-  function addFrame() {
-    animationFrames.push(animationFrames[currentFrame])
-    changeFrame()
-    updateHash()
-    // sliderEl.slider( "option", "max", animationFrames.length )
-  }
-
-  function removeFrame() {
-    animationFrames.splice(currentFrame, 1)
-    if (currentFrame === animationFrames.length) currentFrame--
-    loadCurrentFrame()
-    // sliderEl.slider( "option", "max", animationFrames.length )
-    manualAnimating = true
-    // sliderEl.slider( "option", "value", currentFrame + 1)
-    manualAnimating = false
-  }
-
-  function loadCurrentFrame() {
-    scene.children.filter(function(c) {
-      return (c.isVoxel)
-    }).map(function(c) {
-      scene.remove(c.wireMesh)
-      scene.remove(c)
-    })
-    var positions = getPositionsFromData(decode(animationFrames[currentFrame]))
-    for(var i = 0; i < positions.length; i++){
-      var v = positions[i].split(',')
-      addVoxel(v[0], v[1], v[2], v[3])
-    }
-  }
-
-  function animate(frame) {
-    diff = getFrameDiff(currentFrame, frame)
-    removed = diff[0]
-    added = diff[1]
-    remove = {}
-    removed.map(function(pos){
-      var p = pos.split(',')
-      var key = p[0] + "," + p[1] + "," + p[2]
-      remove[key] = 1
-    })
-    //go through this loop in reverse instead of decrementing the counter every time an item is removed
-    for ( i = scene.children.length - 1; i >= 0 ; i -- ) {
-      c = scene.children[ i ]
-      if (remove[c.name] == 1){
-        if ( c.isVoxel ) {
-          scene.remove(c.wireMesh)
-          scene.remove(c)
-        }
-      }
-    }
-
-    for(var i = 0; i < added.length; i++){
-      var v = added[i].split(',')
-      addVoxel(v[0], v[1], v[2], v[3])
-    }
-  }
-
-  Array.prototype.diff = function(a) {
-    return this.filter(function(i) {return !(a.indexOf(i) > -1);});
-  };
-
-  function getFrameDiff(frame1, frame2) {
-    pos1 = getPositionsFromData(decode(animationFrames[frame1]))
-    pos2 = getPositionsFromData(decode(animationFrames[frame2]))
-    removed = pos1.diff(pos2)
-    added = pos2.diff(pos1)
-    return [removed, added]
-  }
-
   function getPositionsFromData(data) {
     var current = { x: 0, y: 0, z: 0, c: 0 }
     var voxels = []
     var i = 0, l = data.length
-    while (i < l){
-    var code = data[ i ++ ].toString( 2 )
+    while (i < l) {
+      var code = data[ i ++ ].toString( 2 )
       if ( code.charAt( 1 ) == "1" ) current.x += data[ i ++ ] - 32
       if ( code.charAt( 2 ) == "1" ) current.y += data[ i ++ ] - 32
       if ( code.charAt( 3 ) == "1" ) current.z += data[ i ++ ] - 32
@@ -757,15 +571,13 @@ module.exports = function(options) {
     return voxels
   }
 
-
   function buildFromHash(hashMask) {
-
-    var hash = window.location.hash.substr( 1 ),
-    hashChunks = hash.split(':'),
-    chunks = {}
+    var hash = window.location.hash.substr( 1 )
+    var hashChunks = hash.split(':')
+    var chunks = {}
 
     animationFrames = []
-    for( var j = 0, n = hashChunks.length; j < n; j++ ) {
+    for (var j = 0, n = hashChunks.length; j < n; j++) {
       chunk = hashChunks[j].split('/')
       chunks[chunk[0]] = chunk[1]
       if (chunk[0].charAt(0) == 'A') {
@@ -773,10 +585,7 @@ module.exports = function(options) {
       }
     }
 
-    // sliderEl.slider( "option", "max", animationFrames.length)
-
-    if ( (!hashMask || hashMask == 'C') && chunks['C'] )
-    {
+    if ( (!hashMask || hashMask == 'C') && chunks['C'] ){
       // decode colors
       var hexColors = chunks['C']
       for(var c = 0, nC = hexColors.length/6; c < nC; c++) {
@@ -787,16 +596,15 @@ module.exports = function(options) {
     }
     var frameMask = 'A'
 
-    if (currentFrame != 0) frameMask = 'A' + currentFrame
+    if (currentFrame !== 0) frameMask = 'A' + currentFrame
 
-    if ( (!hashMask || hashMask == frameMask) && chunks[frameMask] ) {
+    if ((!hashMask || hashMask == frameMask) && chunks[frameMask]) {
       // decode geo
       var current = { x: 0, y: 0, z: 0, c: 0 }
       var data = decode( chunks[frameMask] )
       var i = 0, l = data.length
 
-      while ( i < l ) {
-
+      while (i < l) {
         var code = data[ i ++ ].toString( 2 )
         if ( code.charAt( 1 ) == "1" ) current.x += data[ i ++ ] - 32
         if ( code.charAt( 2 ) == "1" ) current.y += data[ i ++ ] - 32
@@ -809,18 +617,17 @@ module.exports = function(options) {
     }
 
     updateHash()
-
   }
 
   function updateHash() {
     var data = [], voxels = [], code
     var current = { x: 0, y: 0, z: 0, c: 0 }
     var last = { x: 0, y: 0, z: 0, c: 0 }
-    for ( var i in scene.children ) {
+    for (var i in scene.children) {
 
-      var object = scene.children[ i ]
+      var object = scene.children[i]
 
-      if ( object.isVoxel && object !== plane && object !== brush ) {
+      if (object.isVoxel && object !== plane && object !== brush) {
 
         current.x = ( object.position.x - 25 ) / 50
         current.y = ( object.position.y - 25 ) / 50
@@ -828,7 +635,7 @@ module.exports = function(options) {
 
         var colorString = ['r', 'g', 'b'].map(function(col) { return object.material.color[col] }).join('')
         // this string matching of floating point values to find an index seems a little sketchy
-        for (var i = 0; i < colors.length; i++) if (colors[i].join('') === colorString) current.c = i
+        for (var j = 0; j < colors.length; j++) if (colors[i].join('') === colorString) current.c = j
         voxels.push({x: current.x, y: current.y + 1, z: current.z , c: current.c + 1})
 
         code = 0
@@ -876,17 +683,17 @@ module.exports = function(options) {
     animationFrames[currentFrame] = data
 
     var cData = '';
-    for(var i = 0; i < colors.length; i++){
-      cData+=rgb2hex(colors[i]);
+    for(var k = 0; k < colors.length; k++){
+      cData+=rgb2hex(colors[k]);
     }
 
     var outHash = "#"+(cData?("C/"+cData):'')
-    for(var i = 0; i < animationFrames.length; i++){
-      if (i == 0){
-        outHash = outHash + ":A/" + animationFrames[i]
+    for(var l = 0; l < animationFrames.length; l++){
+      if (l === 0){
+        outHash = outHash + ":A/" + animationFrames[l]
       }
       else {
-        outHash = outHash + ":A" + i + '/' + animationFrames[i]
+        outHash = outHash + ":A" + l + '/' + animationFrames[l]
       }
     }
 
@@ -923,8 +730,8 @@ module.exports = function(options) {
     var canvas = document.createElement('canvas')
     var ctx = canvas.getContext('2d')
     var source = renderer.domElement
-    var width = canvas.width = width || source.width
-    var height = canvas.height = height || source.height
+    width = canvas.width = width || source.width
+    height = canvas.height = height || source.height
 
     renderer.setSize(width, height)
     camera.aspect = width/height
@@ -952,7 +759,7 @@ module.exports = function(options) {
 
   function exportImage(width, height) {
     var canvas = getExportCanvas(width, height)
-    var image = new Image
+    var image = new Image()
     image.src = canvas.toDataURL()
     return image
   }
@@ -997,9 +804,9 @@ module.exports = function(options) {
       if (!file) return false
       if (!file.type.match(/image/)) return false
 
-      var reader = new FileReader
+      var reader = new FileReader()
       reader.onload = function(event) {
-        var image = new Image
+        var image = new Image()
         image.src = event.target.result
         image.onload = function() {
           if (importImage(image)) return

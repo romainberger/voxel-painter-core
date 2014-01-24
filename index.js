@@ -76,6 +76,32 @@ module.exports = function(options) {
     buildFromHash()
   }
 
+  /**
+   * Available colors
+   */
+  exports.colors = colors
+
+  /**
+   * Set the color to use from colors
+   * @param {integer} index
+   * @return boolean
+   */
+  exports.setColor = function(index) {
+    if (index && index <= colors.length) {
+      color = index
+      return true
+    }
+    return false
+  }
+
+  /**
+   * Add a color to the colors set
+   * @param {string} hex Hexadecimal code of the color
+   */
+  exports.addColor = function(hex) {
+    colors.push(hex2rgb(hex))
+  }
+
   function addVoxel(x, y, z, c) {
     var cubeMaterial = new CubeMaterial( { vertexColors: THREE.VertexColors, transparent: true } )
     var col = colors[c] || colors[0]
@@ -134,11 +160,6 @@ module.exports = function(options) {
     camera.position.y = radius * Math.sin( phi * Math.PI / 360 )
     camera.position.z = radius * Math.cos( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 )
     camera.updateMatrix()
-  }
-
-  function addColor(e) {
-    //add new color
-    // @todo
   }
 
   function pickColor(e) {

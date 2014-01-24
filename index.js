@@ -420,7 +420,7 @@ module.exports = function(options) {
     }
   }
 
-  function updateBrush() {
+  function updateBrush(position) {
     brush.position.x = Math.floor( position.x / 50 ) * 50 + 25
     brush.position.y = Math.floor( position.y / 50 ) * 50 + 25
     brush.position.z = Math.floor( position.z / 50 ) * 50 + 25
@@ -454,7 +454,7 @@ module.exports = function(options) {
             if (brush.position.y != 2000) addVoxel(brush.position.x, brush.position.y, brush.position.z, color)
           }
         }
-        updateBrush()
+        updateBrush(position)
         updateHash()
         return brush.currentCube = newCube
       }
@@ -467,7 +467,7 @@ module.exports = function(options) {
         }
       }
       else {
-        updateBrush()
+        updateBrush(position)
         return
       }
     }

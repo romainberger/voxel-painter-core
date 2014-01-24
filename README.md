@@ -35,12 +35,8 @@ Use [Browserify](http://browserify.org/) to bundle your code:
 ```
 var voxelPainter = require('voxel-painter-core')
 
-// Colors to use
-var colors = ['2ECC71', '3498DB', '34495E', 'E67E22', 'ECF0F1']
-
 // Options
 var options = {
-    colors: colors,
     container: '#container'
 }
 
@@ -51,21 +47,13 @@ For a working example check out the [example directory](https://github.com/romai
 
 ## Methods
 
-### Add color
-
-Add a color to the available colors
-
-    painter.addColor('#f00')
-
-You can see the colors that are available with `painter.colors`
-
 ### Set color
 
-Set the color of the painter to the given index
+Set the color of the painter
 
-    painter.setColor(4)
+    painter.setColor('#F15501')
 
-Return `false` is the index does not exist
+To get the currently used color: `painter.color()`
 
 ### Show / hide grid
 

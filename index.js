@@ -76,9 +76,11 @@ module.exports = function(options) {
   }
 
   /**
-   * Current color
+   * Current color as rgb
    */
-  exports.color = color
+  exports.color = function() {
+    return color
+  }
 
   /**
    * Set the color

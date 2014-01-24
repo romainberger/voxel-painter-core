@@ -22,10 +22,7 @@ module.exports = function(options) {
   var wireframeMaterial = new THREE.MeshBasicMaterial(wireframeOptions)
   var currentFrame = 0
   var colors = options.colors.map(function(c) { return hex2rgb(c) })
-
-  for (var c = 0; c < 5; c++) {
-    addColorToPalette(c)
-  }
+  var animationFrames = []
 
   init()
   raf(window).on('data', render)
@@ -50,10 +47,6 @@ module.exports = function(options) {
     scene.children
       .filter(function(el) { return el.isVoxel })
       .map(function(mesh) { scene.remove(mesh) })
-  }
-
-  exports.setColor = function(idx) {
-    $('i[data-color="' + idx + '"]').click()
   }
 
   exports.setWireframe = function(bool) {
@@ -123,34 +116,6 @@ module.exports = function(options) {
     return ( x - fromLow ) * ( toHigh - toLow ) / ( fromHigh - fromLow ) + toLow
   }
 
-  function addColorToPalette(idx) {
-    // add a button to the group
-    var colorBox = $('i[data-color="' + idx + '"]')
-    if(!colorBox.length) {
-      var base = $('.colorAddButton')
-      var clone = base.clone()
-      clone.removeClass('colorAddButton')
-      clone.addClass('colorPickButton')
-      colorBox = clone.find('.colorAdd')
-      colorBox.removeClass('colorAdd')
-      colorBox.addClass('color')
-      colorBox.attr('data-color',idx)
-      colorBox.text('')
-      base.before(clone)
-      clone.click(function(e) {
-        pickColor(e)
-        e.preventDefault()
-      })
-      clone.on("contextmenu", changeColor)
-    }
-
-    colorBox.parent().attr('data-color','#'+rgb2hex(colors[idx]))
-    colorBox.css('background',"#"+rgb2hex(colors[idx]))
-
-    if( color == idx && brush )
-      brush.children[0].material.color.setRGB(colors[idx][0], colors[idx][1], colors[idx][2])
-  }
-
   function zoom(delta) {
     var origin = {x: 0, y: 0, z: 0}
     var distance = camera.position.distanceTo(origin)
@@ -163,10 +128,6 @@ module.exports = function(options) {
   }
 
   function setIsometricAngle() {
-    if ($('.modal').hasClass('in')) {
-      return
-    }
-
     theta += 90
 
     camera.position.x = radius * Math.sin( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 )
@@ -177,104 +138,19 @@ module.exports = function(options) {
 
   function addColor(e) {
     //add new color
-    colors.push([0.0,0.0,0.0])
-    idx = colors.length-1
-
-    color = idx;
-
-    addColorToPalette(idx)
-
-    updateHash()
-
-    updateColor(idx)
-  }
-
-  function updateColor(idx) {
-    color = idx
-    var picker = $('i[data-color="' + idx + '"]').parent().colorpicker('show')
-
-    picker.on('changeColor', function(e) {
-      colors[idx]=hex2rgb(e.color.toHex())
-      addColorToPalette(idx)
-
-      // todo:  better way to update color of existing blocks
-      scene.children
-        .filter(function(el) { return el.isVoxel })
-        .map(function(mesh) { scene.remove(mesh.wireMesh); scene.remove(mesh) })
-      var frameMask = 'A'
-      if (currentFrame !== 0) frameMask = 'A' + currentFrame
-      buildFromHash(frameMask)
-    })
-    picker.on('hide', function(e) {
-      // todo:  add a better remove for the colorpicker.
-      picker.unbind('click.colorpicker')
-    })
-  }
-
-  function changeColor(e) {
-    var target = $(e.currentTarget)
-    var idx = +target.find('.color').attr('data-color')
-    updateColor(idx)
-    return false // eat the event
+    // @todo
   }
 
   function pickColor(e) {
-    var target = $(e.currentTarget)
-    var idx = +target.find('.color').attr('data-color')
-
+    // var target = $(e.currentTarget)
+    // var idx = +target.find('.color').attr('data-color')
+    console.error('todo')
+    return
     color = idx
     brush.children[0].material.color.setRGB(colors[idx][0], colors[idx][1], colors[idx][2])
   }
 
-  function bindEventsAndPlugins() {
-
-    $(window).on('hashchange', function() {
-      if (updatingHash) return
-      localStorage.setItem('seenWelcome', true)
-      window.location.reload()
-    })
-
-    $('#browse img').live('click', function(ev) {
-      var url = $(ev.target).attr('src')
-      $('#browse button').click()
-      exports.getImage(url, function(img) {
-        importImage(img)
-      })
-    })
-
-    $('#shareButton').click(function(e) {
-      e.preventDefault()
-      exports.share()
-      return false
-    })
-
-    $('.colorPickButton').click(pickColor)
-    $('.colorPickButton').on("contextmenu", changeColor)
-    $('.colorAddButton').click(addColor)
-
-    $('.toggle input').click(function(e) {
-      // setTimeout ensures this fires after the input value changes
-      setTimeout(function() {
-        var el = $(e.target).parent()
-        var state = !el.hasClass('toggle-off')
-        exports[el.attr('data-action')](state)
-      }, 0)
-    })
-
-    $(".btn-group a").click(function() {
-        $(this).siblings().removeClass("active");
-        $(this).addClass("active");
-    });
-
-    // Disable link click not scroll top
-    $("a[href='#']").click(function() {
-        return false
-    });
-
-  }
-
   function init() {
-    bindEventsAndPlugins()
     setupImageDropImport(document.body)
 
     container = document.createElement('div')
@@ -533,23 +409,10 @@ module.exports = function(options) {
     switch (event.keyCode) {
       case 189: zoom(100); break
       case 187: zoom(-100); break
-      case 49: exports.setColor(0); break
-      case 50: exports.setColor(1); break
-      case 51: exports.setColor(2); break
-      case 52: exports.setColor(3); break
-      case 53: exports.setColor(4); break
-      case 54: exports.setColor(5); break
-      case 55: exports.setColor(6); break
-      case 56: exports.setColor(7); break
-      case 57: exports.setColor(8); break
-      case 48: exports.setColor(9); break
-      case 32: exports.playPause(); break
       case 16: isShiftDown = true; break
       case 17: isCtrlDown = true; break
       case 18: isAltDown = true; break
-      case 81: changeFrame(); break
       case 65: setIsometricAngle(); break
-      case 87: addFrame(); break
     }
   }
 
@@ -596,7 +459,6 @@ module.exports = function(options) {
       for(var c = 0, nC = hexColors.length/6; c < nC; c++) {
         var hex = hexColors.substr(c*6,6)
         colors[c] = hex2rgb(hex)
-        addColorToPalette(c)
       }
     }
     var frameMask = 'A'

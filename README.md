@@ -4,6 +4,8 @@
 
 Extracted from [Voxel Painter](https://github.com/maxogden/voxel-painter) by [Max Ogden](https://github.com/maxogden). The goal is to make it a base module decoupled from any DOM so it can be used anywhere, and in the future add a way to create add-ons to extend or add some features.
 
+[![NPM](https://nodei.co/npm/voxel-painter-core.png)](https://nodei.co/npm/voxel-painter-core/)
+
 ## Installation
 
 Install with npm
@@ -37,7 +39,7 @@ var voxelPainter = require('voxel-painter-core')
 
 // Options
 var options = {
-    container: '#container'
+    container: '#voxel-painter'
 }
 
 var painter = voxelPainter(options)

@@ -118,7 +118,7 @@ module.exports = function(options) {
   }
 
   function rgb2hex(rgb) {
-    return v2h( rgb[ 0 ] * 255 ) + v2h( rgb[ 1 ] * 255 ) + v2h( rgb[ 2 ] * 255 );
+    return v2h( rgb[ 0 ] * 255 ) + v2h( rgb[ 1 ] * 255 ) + v2h( rgb[ 2 ] * 255 )
   }
 
   function hex2rgb(hex) {
@@ -229,9 +229,9 @@ module.exports = function(options) {
     var ambientLight = new THREE.AmbientLight( 0x606060 )
     scene.add( ambientLight )
 
-    var directionalLight = new THREE.DirectionalLight( 0xffffff );
-    directionalLight.position.set( 1, 0.75, 0.5 ).normalize();
-    scene.add( directionalLight );
+    var directionalLight = new THREE.DirectionalLight( 0xffffff )
+    directionalLight.position.set( 1, 0.75, 0.5 ).normalize()
+    scene.add( directionalLight )
 
     // var directionalLight = new THREE.DirectionalLight( 0xffffff )
     // directionalLight.position.x = Math.random() - 0.5
@@ -541,7 +541,7 @@ module.exports = function(options) {
     data = encode(data)
     animationFrames[currentFrame] = data
 
-    var cData = '';
+    var cData = ''
     // for(var k = 0; k < colors.length; k++){
     //   cData+=rgb2hex(colors[k]);
     // }

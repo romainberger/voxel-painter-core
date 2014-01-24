@@ -1,6 +1,14 @@
 # Voxel Painter Core
 
-Extracted from [Voxel Painter](https://github.com/maxogden/voxel-painter) by [Max Ogden](https://github.com/maxogden).
+**Work In Progress**
+
+Extracted from [Voxel Painter](https://github.com/maxogden/voxel-painter) by [Max Ogden](https://github.com/maxogden). The goal is to make it a base module decoupled from any DOM so it can be used anywhere, and in the future add a way to create add-ons to extend or add some features.
+
+# Installation
+
+Install with npm
+
+    npm install voxel-painter-core --save
 
 # Usage
 

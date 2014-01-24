@@ -4,6 +4,7 @@ var lsb = require('lsb')
 
 module.exports = function(options) {
   var container
+  var containerElement
   var camera, renderer, brush
   var projector, plane, scene, grid, shareDialog
   var mouse2D, mouse3D, raycaster, objectHovered
@@ -289,7 +290,7 @@ module.exports = function(options) {
     setupImageDropImport(document.body)
 
     container = document.createElement('div')
-    var containerElement = document.querySelector(options.container)
+    containerElement = document.querySelector(options.container)
     containerElement.appendChild(container)
 
     camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 )
@@ -386,16 +387,18 @@ module.exports = function(options) {
     renderer.domElement.addEventListener('mouseup', onDocumentMouseUp, false)
     document.addEventListener('keydown', onDocumentKeyDown, false)
     document.addEventListener('keyup', onDocumentKeyUp, false)
-    window.addEventListener('DOMMouseScroll', mousewheel, false)
-    window.addEventListener('mousewheel', mousewheel, false)
     window.addEventListener('resize', onWindowResize, false)
+
+    containerElement.addEventListener('DOMMouseScroll', mousewheel, false)
+    containerElement.addEventListener('mousewheel', mousewheel, false)
 
     if (window.location.hash) buildFromHash()
 
     updateHash()
   }
 
-  function mousewheel( event ) {
+  function mousewheel(event) {
+    event.preventDefault()
     zoom(event.wheelDeltaY || event.detail)
   }
 

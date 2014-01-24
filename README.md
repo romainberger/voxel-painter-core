@@ -47,7 +47,7 @@ Use [Browserify](http://browserify.org/) to bundle your code:
 
 ## Methods
 
-### Add Color
+### Add color
 
 Add a color to the available colors
 
@@ -62,6 +62,14 @@ Set the color of the painter to the given index
     painter.setColor(4)
 
 Return `false` is the index does not exist
+
+### Show / hide grid
+
+    painter.showGrid(boolean)
+
+### Set wireframe
+
+    painter.setWireframe(boolean)
 
 ## License
 

@@ -13,7 +13,7 @@ module.exports = function(options) {
   var onMouseDownPosition = new THREE.Vector2(), onMouseDownPhi = 60, onMouseDownTheta = 45
   var radius = 1600, theta = 90, phi = 60
   var target = new THREE.Vector3( 0, 200, 0 )
-  var color = 0
+  var color = options.color || ['0', '0', '0']
   var CubeMaterial = THREE.MeshBasicMaterial
   var cube = new THREE.CubeGeometry( 50, 50, 50 )
   var wireframeCube = new THREE.CubeGeometry(50.5, 50.5 , 50.5)
@@ -21,7 +21,6 @@ module.exports = function(options) {
   var wireframeOptions = { color: 0x000000, wireframe: true, wireframeLinewidth: 1, opacity: 0.8 }
   var wireframeMaterial = new THREE.MeshBasicMaterial(wireframeOptions)
   var currentFrame = 0
-  var colors = options.colors.map(function(c) { return hex2rgb(c) })
   var animationFrames = []
 
   init()
@@ -77,34 +76,21 @@ module.exports = function(options) {
   }
 
   /**
-   * Available colors
+   * Current color
    */
-  exports.colors = colors
+  exports.color = color
 
   /**
-   * Set the color to use from colors
-   * @param {integer} index
-   * @return boolean
+   * Set the color
+   * @param {string} hex
    */
-  exports.setColor = function(index) {
-    if (index && index <= colors.length) {
-      color = index
-      return true
-    }
-    return false
-  }
-
-  /**
-   * Add a color to the colors set
-   * @param {string} hex Hexadecimal code of the color
-   */
-  exports.addColor = function(hex) {
-    colors.push(hex2rgb(hex))
+  exports.setColor = function(hex) {
+    color = hex2rgb(hex)
   }
 
   function addVoxel(x, y, z, c) {
     var cubeMaterial = new CubeMaterial( { vertexColors: THREE.VertexColors, transparent: true } )
-    var col = colors[c] || colors[0]
+    var col = color
     cubeMaterial.color.setRGB( col[0], col[1], col[2] )
     var wireframeMaterial = new THREE.MeshBasicMaterial(wireframeOptions)
     wireframeMaterial.color.setRGB( col[0]-0.05, col[1]-0.05, col[2]-0.05 )
@@ -160,15 +146,6 @@ module.exports = function(options) {
     camera.position.y = radius * Math.sin( phi * Math.PI / 360 )
     camera.position.z = radius * Math.cos( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 )
     camera.updateMatrix()
-  }
-
-  function pickColor(e) {
-    // var target = $(e.currentTarget)
-    // var idx = +target.find('.color').attr('data-color')
-    console.error('todo')
-    return
-    color = idx
-    brush.children[0].material.color.setRGB(colors[idx][0], colors[idx][1], colors[idx][2])
   }
 
   function init() {
@@ -237,7 +214,7 @@ module.exports = function(options) {
       new CubeMaterial( { vertexColors: THREE.VertexColors, opacity: 0.5, transparent: true } ),
       new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true } )
     ]
-    brushMaterials[0].color.setRGB(colors[0][0], colors[0][1], colors[0][2])
+    brushMaterials[0].color.setRGB(color[0], color[1], color[2])
     brush = THREE.SceneUtils.createMultiMaterialObject( cube, brushMaterials )
 
     brush.isBrush = true
@@ -474,14 +451,14 @@ module.exports = function(options) {
       }
     }
 
-    if ( (!hashMask || hashMask == 'C') && chunks['C'] ){
-      // decode colors
-      var hexColors = chunks['C']
-      for(var c = 0, nC = hexColors.length/6; c < nC; c++) {
-        var hex = hexColors.substr(c*6,6)
-        colors[c] = hex2rgb(hex)
-      }
-    }
+    // if ( (!hashMask || hashMask == 'C') && chunks['C'] ){
+    //   // decode colors
+    //   var hexColors = chunks['C']
+    //   for(var c = 0, nC = hexColors.length/6; c < nC; c++) {
+    //     var hex = hexColors.substr(c*6,6)
+    //     colors[c] = hex2rgb(hex)
+    //   }
+    // }
     var frameMask = 'A'
 
     if (currentFrame !== 0) frameMask = 'A' + currentFrame
@@ -523,7 +500,7 @@ module.exports = function(options) {
 
         var colorString = ['r', 'g', 'b'].map(function(col) { return object.material.color[col] }).join('')
         // this string matching of floating point values to find an index seems a little sketchy
-        for (var j = 0; j < colors.length; j++) if (colors[i].join('') === colorString) current.c = j
+//        for (var j = 0; j < colors.length; j++) if (colors[i].join('') === colorString) current.c = j
         voxels.push({x: current.x, y: current.y + 1, z: current.z , c: current.c + 1})
 
         code = 0
@@ -563,9 +540,9 @@ module.exports = function(options) {
     animationFrames[currentFrame] = data
 
     var cData = '';
-    for(var k = 0; k < colors.length; k++){
-      cData+=rgb2hex(colors[k]);
-    }
+    // for(var k = 0; k < colors.length; k++){
+    //   cData+=rgb2hex(colors[k]);
+    // }
 
     var outHash = "#"+(cData?("C/"+cData):'')
     for (var l = 0; l < animationFrames.length; l++) {

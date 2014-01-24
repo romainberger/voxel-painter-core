@@ -21,7 +21,7 @@ Install with npm
     // Options
     var options = {
         colors: colors,
-        container: '#studio-container'
+        container: '#container'
     }
 
     var painter = voxelPainter(options)

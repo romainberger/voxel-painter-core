@@ -5,6 +5,7 @@ var lsb = require('lsb')
 module.exports = function(options) {
   var container
   var containerElement
+  var canvasWidth, canvasHeight
   var camera, renderer, brush
   var projector, plane, scene, grid, shareDialog
   var mouse2D, mouse3D, raycaster, objectHovered
@@ -260,19 +261,6 @@ module.exports = function(options) {
       }, 0)
     })
 
-    // Init tags input
-    // $("#tagsinput").tagsInput();
-
-    // addFrameButton.click(addFrame)
-    // removeFrameButton.click(removeFrame)
-
-    // playPauseEl.click(function(e) {
-    //   exports.playPause()
-    // })
-
-    // JS input/textarea placeholder
-    // $("input, textarea").placeholder();
-
     $(".btn-group a").click(function() {
         $(this).siblings().removeClass("active");
         $(this).addClass("active");
@@ -293,7 +281,17 @@ module.exports = function(options) {
     containerElement = document.querySelector(options.container)
     containerElement.appendChild(container)
 
-    camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 )
+    // determines the width and height of the canvas
+    if (containerElement === 'body') {
+      width  = window.innerWidth
+      height = window.innerHeight
+    }
+    else {
+      width  = containerElement.offsetWidth
+      height = containerElement.offsetHeight
+    }
+
+    camera = new THREE.PerspectiveCamera( 40, width / height, 1, 10000 )
     camera.position.x = radius * Math.sin( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 )
     camera.position.y = radius * Math.sin( phi * Math.PI / 360 )
     camera.position.z = radius * Math.cos( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 )
@@ -378,7 +376,7 @@ module.exports = function(options) {
     if (hasWebGL) renderer = new THREE.WebGLRenderer({antialias: true})
     else renderer = new THREE.CanvasRenderer()
 
-    renderer.setSize( window.innerWidth, window.innerHeight )
+    renderer.setSize(width, height)
 
     container.appendChild(renderer.domElement)
 

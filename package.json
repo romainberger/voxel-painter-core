@@ -22,9 +22,9 @@
   },
   "dependencies": {
     "browserify": "~3.23.1",
-    "lsb": "~0.1.0",
-    "raf": "0.0.3",
-    "three": "~0.58.10"
+    "lsb": "0.1.0",
+    "raf": "0.0.1",
+    "three": "0.55.00"
   },
   "license": "BSD"
 }

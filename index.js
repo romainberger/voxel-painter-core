@@ -647,39 +647,31 @@ module.exports = function(options) {
 
         code += 10000
 
-        data.push( parseInt( code, 2 ) )
+        data.push(parseInt(code, 2))
 
-        if ( current.x != last.x ) {
-
-          data.push( current.x - last.x + 32 )
+        if (current.x != last.x) {
+          data.push(current.x - last.x + 32)
           last.x = current.x
-
         }
 
-        if ( current.y != last.y ) {
-
-          data.push( current.y - last.y + 32 )
+        if (current.y != last.y) {
+          data.push(current.y - last.y + 32)
           last.y = current.y
-
         }
 
-        if ( current.z != last.z ) {
-
-          data.push( current.z - last.z + 32 )
+        if (current.z != last.z) {
+          data.push(current.z - last.z + 32)
           last.z = current.z
-
         }
 
-        if ( current.c != last.c ) {
-
-          data.push( current.c - last.c + 32 )
+        if (current.c != last.c) {
+          data.push(current.c - last.c + 32)
           last.c = current.c
-
         }
       }
     }
 
-    data = encode( data )
+    data = encode(data)
     animationFrames[currentFrame] = data
 
     var cData = '';
@@ -688,8 +680,8 @@ module.exports = function(options) {
     }
 
     var outHash = "#"+(cData?("C/"+cData):'')
-    for(var l = 0; l < animationFrames.length; l++){
-      if (l === 0){
+    for (var l = 0; l < animationFrames.length; l++) {
+      if (l === 0) {
         outHash = outHash + ":A/" + animationFrames[l]
       }
       else {
@@ -828,37 +820,35 @@ module.exports = function(options) {
       if (voxel.z < low[2]) low[2] = voxel.z
       if (voxel.z > high[2]) high[2] = voxel.z
     })
-    return [ high[0]-low[0], high[1]-low[1], high[2]-low[2] ]
+    return [high[0]-low[0], high[1]-low[1], high[2]-low[2]]
   }
 
   // https://gist.github.com/665235
 
-  function decode( string ) {
-
+  function decode(string) {
     var output = []
-    string.split('').forEach( function ( v ) { output.push( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf( v ) ) } )
+    string.split('').forEach( function(v) {
+      output.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf(v))
+    })
     return output
-
   }
 
-  function encode( array ) {
-
+  function encode(array) {
     var output = ""
-    array.forEach( function ( v ) { output += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt( v ) } )
+    array.forEach(function(v) {
+      output += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(v)
+    })
     return output
-
   }
 
   function save() {
-
-    window.open( renderer.domElement.toDataURL('image/png'), 'mywindow' )
-
+    window.open(renderer.domElement.toDataURL('image/png'), 'mywindow')
   }
 
   function render() {
-    camera.lookAt( target )
-    raycaster = projector.pickingRay( mouse2D.clone(), camera )
-    renderer.render( scene, camera )
+    camera.lookAt(target)
+    raycaster = projector.pickingRay(mouse2D.clone(), camera)
+    renderer.render(scene, camera)
   }
 
   return exports

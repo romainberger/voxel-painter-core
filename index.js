@@ -395,6 +395,10 @@ module.exports = function(options) {
     updateHash()
   }
 
+  function mousewheel( event ) {
+    zoom(event.wheelDeltaY || event.detail)
+  }
+
   function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()

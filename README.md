@@ -16,7 +16,7 @@ Install with npm
 
 Use [Browserify](http://browserify.org/) to bundle your code:
 
-```
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +34,7 @@ Use [Browserify](http://browserify.org/) to bundle your code:
 </html>
 ```
 
-```
+```javascript
 var voxelPainter = require('voxel-painter-core')
 
 // Options

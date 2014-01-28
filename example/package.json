@@ -8,7 +8,7 @@
   },
   "license": "BSD",
   "dependencies": {
-    "voxel-painter-core": "0.0.4"
+    "voxel-painter-core": ">=0.0.5"
   },
   "devDependencies": {
     "watchify": "~0.5.4"

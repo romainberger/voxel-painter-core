@@ -1,4 +1,4 @@
-var voxelPainter = require('voxel-painter-core')
+var voxelPainter = require('./../')
 
 // Options
 var options = {

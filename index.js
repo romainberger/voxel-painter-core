@@ -141,6 +141,10 @@ module.exports = function(options) {
     callPluginHook('postAddVoxel', [x, y, z, c])
   }
 
+  function removeVoxel(x, y, z) {
+    callPluginHook('removeVoxel', [x, y, z])
+  }
+
   function v2h(value) {
     value = parseInt(value).toString(16)
     return value.length < 2 ? '0' + value : value
@@ -352,6 +356,7 @@ module.exports = function(options) {
             if ( intersect.object !== plane ) {
               scene.remove( intersect.object.wireMesh )
               scene.remove( intersect.object )
+              removeVoxel(brush.position.x, brush.position.y, brush.position.z, color)
             }
           } else {
             if (brush.position.y != 2000) addVoxel(brush.position.x, brush.position.y, brush.position.z, color)
@@ -422,6 +427,7 @@ module.exports = function(options) {
         if (intersect.object != plane) {
           scene.remove( intersect.object.wireMesh )
           scene.remove( intersect.object )
+          removeVoxel(brush.position.x, brush.position.y, brush.position.z)
         }
       }
       else {

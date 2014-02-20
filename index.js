@@ -22,6 +22,8 @@ module.exports = function(options) {
   var wireframeMaterial = new THREE.MeshBasicMaterial(wireframeOptions)
   var currentFrame = 0
   var animationFrames = []
+  // Plugins list
+  var plugins = []
 
   init()
   raf(window).on('data', render)
@@ -90,6 +92,31 @@ module.exports = function(options) {
     color = hex2rgb(hex)
   }
 
+  /**
+   * Load a plugin
+   */
+  exports.loadPlugin = function(plugin) {
+    plugins.push(plugin)
+  }
+
+  /**
+   * Detach a plugin
+   */
+  exports.detachPlugin = function(plugin) {
+
+  }
+
+  /**
+   * Return the list of attached plugins as array
+   */
+  exports.getPlugins = function() {
+    var names = []
+    plugins.forEach(function(plugin) {
+      names.push(plugin.name)
+    })
+    return names
+  }
+
   function addVoxel(x, y, z, c) {
     var cubeMaterial = new CubeMaterial( { vertexColors: THREE.VertexColors, transparent: true } )
     var col = color
@@ -110,6 +137,8 @@ module.exports = function(options) {
     voxel.overdraw = true
     scene.add( voxel )
     scene.add( voxel.wireMesh )
+
+    callPluginHook('postAddVoxel', [x, y, z, c])
   }
 
   function v2h(value) {
@@ -716,6 +745,21 @@ module.exports = function(options) {
     camera.lookAt(target)
     raycaster = projector.pickingRay(mouse2D.clone(), camera)
     renderer.render(scene, camera)
+  }
+
+  /**
+   * Run the plugins' methods for the given hook
+   * @param {string} hookName Name of the hook to call
+   * @param {array} arguments Arguments to pass to the plugin's method
+   */
+  function callPluginHook(hookName, args) {
+    plugins.forEach(function(plugin) {
+      if (typeof plugin[hookName] === 'function') {
+        // @todo use call or apply to run the method with the arguments as array
+        // then get the modified arguments
+        plugin[hookName].apply(null, args)
+      }
+    })
   }
 
   return exports

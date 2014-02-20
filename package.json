@@ -1,6 +1,6 @@
 {
   "name": "voxel-painter-core",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Voxel Painter Core",
   "author": {
     "name": "Romain Berger",
@@ -16,14 +16,11 @@
     "email": "romain@romainberger.com"
   },
   "main": "index.js",
-  "engines": {
-    "node": "0.10.x",
-    "npm": "1.3.x"
-  },
   "dependencies": {
     "lsb": "0.1.0",
     "raf": "0.0.1",
-    "three": "0.55.00"
+    "three": "0.55.00",
+    "lodash": "~2.4.1"
   },
   "license": "BSD"
 }

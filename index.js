@@ -1,6 +1,7 @@
 var THREE = require('three')
 var raf = require('raf')
 var lsb = require('lsb')
+var _ = require('lodash')
 
 module.exports = function(options) {
   var container
@@ -90,6 +91,7 @@ module.exports = function(options) {
    */
   exports.setColor = function(hex) {
     color = hex2rgb(hex)
+    callPluginHook('changeColor', color)
   }
 
   /**
@@ -103,7 +105,6 @@ module.exports = function(options) {
    * Detach a plugin
    */
   exports.detachPlugin = function(plugin) {
-
   }
 
   /**
@@ -334,7 +335,7 @@ module.exports = function(options) {
   }
 
   function interact() {
-    if (typeof raycaster === 'undefined') return
+    if (_.isUndefined(raycaster)) return
 
     if (objectHovered) {
       objectHovered.material.opacity = 1
@@ -760,7 +761,7 @@ module.exports = function(options) {
    */
   function callPluginHook(hookName, args) {
     plugins.forEach(function(plugin) {
-      if (typeof plugin[hookName] === 'function') {
+      if (_.isFunction(plugin[hookName])) {
         // @todo use call or apply to run the method with the arguments as array
         // then get the modified arguments
         plugin[hookName].apply(null, args)

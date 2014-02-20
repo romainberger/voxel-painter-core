@@ -65,6 +65,10 @@ To get the currently used color: `painter.color()`
 
     painter.setWireframe(boolean)
 
+## Plugins
+
+Informations to write plugins can be found in [Plugins.md](https://github.com/romainberger/voxel-painter-core/tree/master/Plugins.md)
+
 ## License
 
 BSD

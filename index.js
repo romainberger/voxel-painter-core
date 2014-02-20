@@ -1,6 +1,9 @@
 var THREE = require('three')
 var raf = require('raf')
 var lsb = require('lsb')
+// plugin stream
+var Stream = require('stream')
+var pluginStream = new Strean
 
 module.exports = function(options) {
   var container
@@ -90,7 +93,16 @@ module.exports = function(options) {
     color = hex2rgb(hex)
   }
 
+  /**
+   * Load a plugin
+   * Returns the plugin with the core module stream loaded
+   */
+  exports.loadPlugin = function(plugin) {
+    return plugin(pluginStream)
+  }
+
   function addVoxel(x, y, z, c) {
+    pluginStream.emit('addVoxel', [x, y, z, c])
     var cubeMaterial = new CubeMaterial( { vertexColors: THREE.VertexColors, transparent: true } )
     var col = color
     cubeMaterial.color.setRGB( col[0], col[1], col[2] )

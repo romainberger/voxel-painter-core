@@ -105,6 +105,9 @@ module.exports = function(options) {
    * Detach a plugin
    */
   exports.detachPlugin = function(plugin) {
+    plugins = _.remove(plugins, function(item) {
+      item.name === plugin.name
+    })
   }
 
   /**
